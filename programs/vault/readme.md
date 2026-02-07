@@ -8,7 +8,8 @@ A secure vault program on Solana that allows a user to:
 4. Close the Vault and recover rent.
 
 ## Test Results
-![Tests Passing](./test_result.png)
+<img width="1912" height="1079" alt="anchor_vault_program" src="https://github.com/user-attachments/assets/3536f2f5-783c-4275-b0d5-02d4d9d640fd" />
+
 
 ## Transaction Logs
 Init: To see terminal output
