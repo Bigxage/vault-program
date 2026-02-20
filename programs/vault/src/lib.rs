@@ -48,7 +48,29 @@ pub mod vault {
     }
 
     pub fn close(ctx: Context<Close>) -> Result<()> {
-        msg!("I have closed the vault");
+        // 1. Defining the seeds for the Vault PDA to sign the transfer
+        let seeds = &[
+            b"vault",
+            ctx.accounts.state.to_account_info().key.as_ref(),
+            &[ctx.bumps.vault],
+        ];
+        let signer = &[&seeds[..]];
+
+        // 2. Creating the CPI context to move SOL from Vault to Maker
+        let cpi_context = CpiContext::new_with_signer(
+            ctx.accounts.system_program.to_account_info(),
+            Transfer {
+                from: ctx.accounts.vault.to_account_info(),
+                to: ctx.accounts.maker.to_account_info(),
+            },
+            signer,
+        );
+
+        // 3. Getting the full balance of the vault and execute the transfer
+        let amount = ctx.accounts.vault.lamports();
+        transfer(cpi_context, amount)?;
+
+        msg!("Vault emptied and state account closed!");
         Ok(())
     }
 }
